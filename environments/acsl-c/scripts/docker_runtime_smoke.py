@@ -74,7 +74,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--image",
-        default="ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:5da598c4fa7f1e4210412822f3c3942764baa0057e85070ab5d3b1fadd1ac9dc",
+        default="ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593",
     )
     parser.add_argument("--split", default="validation")
     parser.add_argument("--output", type=Path)

@@ -3,14 +3,16 @@
 # its source archive. Keep research-only corpora and generated diagnostics out.
 
 .venv*/
+.prime/
 .pytest_cache/
 .ruff_cache/
 .frama-c/
 build/
-dist/
+dist*/
 outputs/
 *.egg-info/
-**/__pycache__/
+__pycache__/
+*.py[cod]
 
 # Research/source-evaluation corpora are not part of the redistributable core.
 data_prev/

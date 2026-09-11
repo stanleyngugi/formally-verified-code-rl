@@ -225,7 +225,7 @@ Completed on 2026-09-10:
   rejected wrong implementation; all declared expectations matched under the
   deterministic Qed policy. Full-mode contract synthesis remains disabled,
   while hints-mode strength continues to come from immutable annotations.
-- The 35-test release suite covers contract tampering, fake verifier text,
+- The 42-test release suite covers contract tampering, fake verifier text,
   malformed/zero-goal reports, timeouts, runner-aware cache keys, concurrent
   cache access, and failed-edit/rollback trace history.
 - Release configs use a restricted Docker runtime (`allow = []`), a writable

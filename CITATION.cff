@@ -5,7 +5,7 @@ type: software
 authors:
   - family-names: "Ngugi"
     given-names: "Stanley"
-version: 0.1.4
+version: 0.1.6
 date-released: 2026-09-11
 license: Apache-2.0
 repository-code: "https://github.com/stanleyngugi/formally-verified-code-rl"

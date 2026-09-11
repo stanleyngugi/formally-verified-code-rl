@@ -42,17 +42,26 @@ two-GPU throughput work remain follow-on research rather than blockers.
   checkpoint, and serial plumbing feasibility. It is not a learning-lift or
   verifier-scored training claim.
 
-## Publication work in progress
+## Publication status
 
-1. Push the repository and v0.1.4 prerelease under
-   `https://github.com/stanleyngugi/formally-verified-code-rl`.
-2. Push ACSL-C privately to Prime's Environment Hub, install that exact Hub
-   artifact, run the model-free validation, then make the listing public.
-3. Publish the Core-v1 mirror and dataset card on Hugging Face.
-4. Publish the judge container at an immutable public digest, or confirm that
-   Prime builds the checked-in Dockerfile for the environment runtime.
-5. Replace final blog placeholders with the resulting GitHub, Prime, image, and
-   dataset URLs before publishing the post.
+- The canonical GitHub repository is public at
+  `https://github.com/stanleyngugi/formally-verified-code-rl`; v0.1.4 is the
+  historical first prerelease and v0.1.6 is the recommended release candidate.
+- The exact Core-v1 mirror and dataset card are public at
+  `https://huggingface.co/datasets/stan4u/formally-verified-c-core-v1`.
+- The rebuilt judge is uploaded at immutable digest
+  `sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593`.
+  Its GHCR package is uploaded but still private; GitHub documents package
+  visibility as a Package settings / Danger Zone dashboard action.
+- Prime environment v0.1.6 is uploaded. Its pristine source archive contains no
+  bytecode or research payload; the source audit passes, 42/42 tests pass, and
+  the public loader constructs a one-task `AcslCTaskset`. The listing remains
+  private because the current CLI applies `--visibility` only when creating a
+  new environment, not when updating an existing one.
+- The in-depth blog draft contains the final names, URLs, evidence, scope,
+  limitations, related-work positioning, training-canary interpretation, and
+  roadmap. Publication should follow the two dashboard visibility switches so
+  every installation command in the post works anonymously.
 
 ## Deliberately deferred
 

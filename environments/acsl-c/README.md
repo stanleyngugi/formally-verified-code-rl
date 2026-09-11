@@ -92,9 +92,9 @@ additionally requires two locally visible GPUs.
 ## Container and training
 
 ```bash
-docker pull ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:5da598c4fa7f1e4210412822f3c3942764baa0057e85070ab5d3b1fadd1ac9dc
-docker image inspect ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:5da598c4fa7f1e4210412822f3c3942764baa0057e85070ab5d3b1fadd1ac9dc --format '{{.Id}}'
-docker run --rm -v "$PWD:/workspace/acsl-c" ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:5da598c4fa7f1e4210412822f3c3942764baa0057e85070ab5d3b1fadd1ac9dc \
+docker pull ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593
+docker image inspect ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593 --format '{{.Id}}'
+docker run --rm -v "$PWD:/workspace/acsl-c" ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593 \
   python3 /workspace/acsl-c/scripts/replay_references.py \
   --data-dir /workspace/acsl-c/data --split all --jobs 1 \
   --output /workspace/acsl-c/artifacts/reference-replay.jsonl \

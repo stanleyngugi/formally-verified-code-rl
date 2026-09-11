@@ -47,7 +47,7 @@ scripts, but those results must not be labelled Prime-RL training evidence.
 
 The Docker image is the verification plane, not the model-compute plane. The
 original pinned image `verified-rl-envs/framac:33.0` already exists at digest
-`sha256:5da598c4fa7f1e4210412822f3c3942764baa0057e85070ab5d3b1fadd1ac9dc`
+`sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593`
 and passed the complete 316-reference replay (5,205/5,205 WP+RTE goals,
 1,264/1,264 RTE goals, zero timeouts). That image is sufficient for replay and
 for the eventual reward audit. A second image build is only an optional

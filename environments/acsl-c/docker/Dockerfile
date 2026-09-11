@@ -38,9 +38,11 @@ ARG Z3_APT_VERSION=4.8.12-3.1build1
 ARG UV_VERSION=0.12.5
 ARG OPAM_UID=10001
 
-LABEL org.opencontainers.image.title="verified-rl-envs Frama-C judge" \
-      org.opencontainers.image.description="Pinned ACSL-C RL verification runtime" \
-      org.opencontainers.image.version="1.1.0" \
+LABEL org.opencontainers.image.title="Formally Verified C judge" \
+      org.opencontainers.image.description="Pinned C/ACSL formal-verification runtime for Formally Verified C" \
+      org.opencontainers.image.version="0.1.4" \
+      org.opencontainers.image.source="https://github.com/stanleyngugi/formally-verified-code-rl" \
+      org.opencontainers.image.licenses="Apache-2.0" \
       ai.verified-rl.toolchain="frama-c=33.0;why3=1.8.2;alt-ergo=2.6.3;z3=4.8.12"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \

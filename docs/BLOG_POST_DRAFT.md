@@ -258,7 +258,7 @@ corpus claim:
 - A cold serial replay proved all 316 references: 5,205/5,205 proof goals and
   1,264/1,264 runtime-error goals, with zero solver timeouts.
 - The judge image is pinned at
-  `sha256:5da598c4fa7f1e4210412822f3c3942764baa0057e85070ab5d3b1fadd1ac9dc`.
+  `sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593`.
 - Prime-RL v0.9.0 and its exact vendored Verifiers revision resolve the training
   configuration in a dry-run.
 - Verifiers v1 model-free validation passes 3/3 gold tasks through Docker.
@@ -298,10 +298,13 @@ of that interface, not a prerequisite for defining it.
 
 The clean data boundary is now implemented. Core-v1, its replay and negative
 evidence, and the CASP-excluding wheel audit all pass. GitHub is the canonical
-engineering record, a public OCI registry will hold the judge by digest, and
-Prime's Environments Hub will provide the installable package and discovery
-page. The first Hub upload is private so that the exact downloaded artifact can
-be tested before the listing becomes public.
+engineering record, GHCR holds the judge by digest, and Prime's Environments
+Hub provides the installable package and discovery page. Before changing the
+listings to public, I pulled Prime v0.1.6 into a pristine directory: its source
+and secret audits passed, its full Linux suite passed 42/42 tests, and its
+public loader constructed the requested taskset. I inspected a second pristine
+pull before importing its modules and confirmed that the archive itself
+contained neither bytecode nor research-only payloads.
 
 The CASP permission/provenance request continues in parallel. If it is resolved,
 the 316-task validated corpus can become a separately versioned expansion pack
@@ -336,6 +339,10 @@ With Python 3.11–3.13 and `uv`/Prime installed:
 prime env install stanley-ngugi/formally-verified-c
 ```
 
+The recommended environment package is v0.1.6. Core-v1 remains dataset v0.1.4
+because the two intervening package releases changed runtime identity and
+archive hygiene, not any task record or split.
+
 For source development:
 
 ```bash
@@ -347,7 +354,7 @@ uv run pytest -q
 
 The pinned judge image is published as
 `ghcr.io/stanleyngugi/formally-verified-c-judge:0.1.4`. The immutable release
-reference is `ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:5da598c4fa7f1e4210412822f3c3942764baa0057e85070ab5d3b1fadd1ac9dc`.
+reference is `ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593`.
 
 ## What this release claims—and what it does not
 

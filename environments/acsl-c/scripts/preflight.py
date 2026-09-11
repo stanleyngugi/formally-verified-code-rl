@@ -20,7 +20,7 @@ from pathlib import Path
 EXPECTED_SPLITS = {"train": 33, "validation": 15, "test": 16}
 EXPECTED_PRIME_COMMIT = "ab5de8fff44b2c4a5c85e24b6e6e3f7d57eee7b1"
 EXPECTED_VERIFIERS_COMMIT = "b2e4e8157783b2c0dffc7821044c87f29f1c3ccf"
-DEFAULT_IMAGE = "ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:5da598c4fa7f1e4210412822f3c3942764baa0057e85070ab5d3b1fadd1ac9dc"
+DEFAULT_IMAGE = "ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593"
 ENV_ROOT = Path(__file__).resolve().parent.parent
 REPO_ROOT = ENV_ROOT.parents[1]
 

@@ -25,12 +25,12 @@
     "bundles_casp_data": false,
     "bundles_core_v1": true,
     "ok": true,
-    "wheel": "formally_verified_c-0.1.4-py3-none-any.whl",
-    "wheel_sha256": "27e77462fde7d4ddcdaf7a46a3c5aa4a8ad3e05033fb9ec35fe87a04057bfc41",
-    "wheel_size_bytes": 38158
+    "wheel": "formally_verified_c-0.1.6-py3-none-any.whl",
+    "wheel_sha256": "833cb13adc826ddfe7a3c7604d0e6425b51750cd5110aad2ae3843d6a4ebcb1c",
+    "wheel_size_bytes": 38161
   },
   "reference_replay": {
-    "artifact_sha256": "49a7b5d53fc9606e69c48039a7335d8215467c51d2d38b4f3c69b13fe41ad88e",
+    "artifact_sha256": "332ba1b990335c136a3b99432f28919a692b900a013be97b18686b79a988d54a",
     "fully_proved": 64,
     "goals_proved": 296,
     "goals_total": 296,

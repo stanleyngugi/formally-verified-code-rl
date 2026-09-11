@@ -11,7 +11,7 @@
   "rte_total": 84,
   "solver_timeouts": 0,
   "failure_kinds": {},
-  "duration_seconds": 59.634,
+  "duration_seconds": 78.065,
   "policy": {
     "framac_bin": "frama-c",
     "flags": [

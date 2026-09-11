@@ -21,7 +21,8 @@ CASP-bundled corpus or wheel.** The public v0.1 path is `core-v1`; see
 - [x] Docker smoke proves a reference while direct network egress is blocked
       and the host workspace is absent.
 - [x] Fail-closed parser, integrity, cache/concurrency, fake-output, timeout,
-      trace rollback, and negative-case checks pass in the 35-test suite.
+      trace rollback, and negative-case checks pass in the 42-test suite on
+      Linux, the supported Verifiers v1 platform.
 - [x] Image digest, task manifest digest, tool versions, commands, and compact
       result artifacts are retained under `environments/acsl-c/artifacts/`.
 - [x] Model/GPU experiments are labelled as optional feasibility evidence and
@@ -37,14 +38,20 @@ CASP-bundled corpus or wheel.** The public v0.1 path is `core-v1`; see
       permission or a complete compatible-license provenance map is obtained.
 - [x] Add Apache-2.0 licensing, citation metadata, maintainer/contact, security
       policy, and the canonical repository URL.
-- [ ] Push the reviewed commit to the public repository.
-- [ ] Publish the judge image to a public registry by immutable digest, or adapt
-      the hub runtime to build it from `docker/Dockerfile`.
-- [ ] Push with Prime's documented private visibility first, install the actual
-      Hub artifact cleanly, and run its model-free validation before making the
-      listing public.
-- [ ] Publish the blog post after replacing the draft's repository/image links
-      and adding the final hub page.
+- [x] Push the reviewed commit and v0.1.4 historical prerelease to the public
+      repository; publish v0.1.6 after the final source update.
+- [ ] Change the uploaded GHCR judge package to public. The rebuilt image is
+      already uploaded at immutable digest
+      `sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593`;
+      only the Package settings visibility control remains.
+- [x] Push Prime v0.1.6, pull the exact Hub source archive, confirm the source
+      and secret audits, pass 42/42 Linux tests, and construct its public v1
+      taskset loader.
+- [ ] Change the Prime listing to public in its Visibility settings. The CLI's
+      `--visibility PUBLIC` is ignored for an already-existing environment.
+- [ ] Publish the blog post after those two listings are anonymous-readable.
+      The draft itself has final artifact URLs and no remaining content
+      placeholder.
 
 The reason the current wheel cannot be the public wheel is explicit. The
 [CASP dataset card](https://huggingface.co/datasets/nicher92/CASP_dataset/blob/main/README.md)
