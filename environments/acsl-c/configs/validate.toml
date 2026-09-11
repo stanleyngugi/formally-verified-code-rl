@@ -1,0 +1,31 @@
+# Model-free release smoke for Verifiers v1. Run from the pinned Prime-RL
+# checkout with: uv run --no-sync validate @ /path/to/this/file
+
+only_gold = true
+num_tasks = 3
+max_concurrent = 1
+rich = false
+output_dir = "/tmp/acslc-v1-validate"
+
+[taskset]
+id = "formally-verified-c"
+split = "validation"
+require_non_vacuous = true
+allow_full_mode = false
+
+[taskset.task]
+framac_bin = "frama-c"
+provers = "alt-ergo,z3"
+wp_timeout = 20
+cache_path = "/tmp/acslc-v1-validate-cache.sqlite3"
+
+[runtime]
+type = "docker"
+image = "ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:5da598c4fa7f1e4210412822f3c3942764baa0057e85070ab5d3b1fadd1ac9dc"
+workdir = "/workspace"
+allow = []
+cpu = 2
+memory = 4
+
+[timeout]
+total = 180

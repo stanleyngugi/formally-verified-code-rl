@@ -1,0 +1,57 @@
+# HISTORICAL ONLY: records the patched, colocated one-GPU smoke run. Use
+# configs/train.toml for new prime-rl v0.9.0 runs.
+max_steps = 12
+seq_len = 4096
+
+[model]
+name = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
+
+[trainer.model.lora]
+
+[orchestrator]
+batch_size = 16
+group_size = 8
+
+[orchestrator.train.sampling]
+max_completion_tokens = 2048
+temperature = 0.9
+
+[[orchestrator.train.source]]
+name = "acsl-c"
+
+[orchestrator.train.source.env.taskset]
+id = "acsl-c"
+data_dir = "/workspace/acsl-c/data"
+data_glob = "*.jsonl"
+split = "train"
+eval_split_size = 48
+max_tasks = 64
+task.framac_bin = "/usr/local/bin/frama-c"
+task.provers = "alt-ergo,z3"
+task.wp_timeout = 20
+
+[orchestrator.train.source.env.agent.harness]
+id = "null"
+
+[orchestrator.train.source.env.agent.runtime]
+type = "subprocess"
+
+[trainer.optim]
+lr = 2e-5
+
+[env_vars]
+HF_HUB_OFFLINE = "1"
+
+[inference]
+router = "None"
+
+[inference.vllm]
+gpu_memory_utilization = 0.45
+max_model_len = 4096
+enforce_eager = true
+max_num_seqs = 64
+
+[orchestrator.renderer]
+name = "default"
+
+[ckpt]

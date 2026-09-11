@@ -1,0 +1,35 @@
+{
+  "schema": "acsl-c-reference-replay-summary-v1",
+  "script_version": 1,
+  "split": "all",
+  "expected": 64,
+  "completed": 64,
+  "fully_proved": 64,
+  "goals_proved": 296,
+  "goals_total": 296,
+  "rte_proved": 84,
+  "rte_total": 84,
+  "solver_timeouts": 0,
+  "failure_kinds": {},
+  "duration_seconds": 59.634,
+  "policy": {
+    "framac_bin": "frama-c",
+    "flags": [
+      "-wp",
+      "-wp-rte",
+      "-wp-prover",
+      "qed,alt-ergo",
+      "-wp-timeout",
+      "10"
+    ],
+    "wall_timeout": 30,
+    "jobs": 4,
+    "manifest_sha256": "ad9c3c7f1fad75458a04d8f20a5cab316834aa0111d7dbae54d1e445187c244e"
+  },
+  "tool_versions": {
+    "frama_c": "33.0 (Arsenic)",
+    "why3": "Why3 platform, version 1.8.2",
+    "alt_ergo": "v2.6.3",
+    "z3": "Z3 version 4.8.12 - 64 bit"
+  }
+}

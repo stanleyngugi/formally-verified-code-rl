@@ -1,0 +1,60 @@
+[
+  {
+    "model": "unsloth/Qwen2.5-Coder-7B-Instruct-bnb-4bit",
+    "sequence_length": 2048,
+    "experiment": "generation_and_qlora_optimizer_probe",
+    "status": "passed",
+    "torch": "2.11.0+cu128",
+    "unsloth": "2026.9.3",
+    "gpu": "Tesla T4",
+    "revision": "4858886f896bd05db823557fc5cbc4ac28342af7",
+    "generated_tokens": 128,
+    "loaded": {
+      "used_gib": 5.3875732421875,
+      "peak_allocated_gib": 5.22504997253418,
+      "peak_reserved_gib": 5.23828125
+    },
+    "generation_memory": {
+      "used_gib": 5.4774169921875,
+      "peak_allocated_gib": 5.245336055755615,
+      "peak_reserved_gib": 5.328125
+    },
+    "loss": 0.018102111294865608,
+    "trainable_parameters": 40370176,
+    "optimizer_step": {
+      "used_gib": 7.7684326171875,
+      "peak_allocated_gib": 6.718214988708496,
+      "peak_reserved_gib": 7.609375
+    },
+    "elapsed_seconds": 124.90587049700002
+  },
+  {
+    "model": "unsloth/Qwen2.5-Coder-14B-Instruct-bnb-4bit",
+    "sequence_length": 1024,
+    "experiment": "generation_and_qlora_optimizer_probe",
+    "status": "passed",
+    "torch": "2.11.0+cu128",
+    "unsloth": "2026.9.3",
+    "gpu": "Tesla T4",
+    "revision": "ecfc63c083900ce4f19daad695e711f38ab98fcf",
+    "generated_tokens": 128,
+    "loaded": {
+      "used_gib": 9.5770263671875,
+      "peak_allocated_gib": 9.308985710144043,
+      "peak_reserved_gib": 9.328125
+    },
+    "generation_memory": {
+      "used_gib": 9.7254638671875,
+      "peak_allocated_gib": 9.402710437774658,
+      "peak_reserved_gib": 9.4765625
+    },
+    "loss": 0.035684630274772644,
+    "trainable_parameters": 68812800,
+    "optimizer_step": {
+      "used_gib": 12.4188232421875,
+      "peak_allocated_gib": 10.749217987060547,
+      "peak_reserved_gib": 12.158203125
+    },
+    "elapsed_seconds": 208.40309063100005
+  }
+]

@@ -1,0 +1,52 @@
+[project]
+name = "formally-verified-c"
+version = "0.1.4"
+description = "RL environment for C implementations formally proved against ACSL contracts with Frama-C"
+readme = "README.md"
+license = "Apache-2.0"
+authors = [{ name = "Stanley Ngugi" }]
+keywords = ["reinforcement-learning", "formal-verification", "C", "ACSL", "Frama-C"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Testing",
+]
+tags = ["coding", "formal-verification", "train", "eval"]
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    # Exact commit vendored by prime-rl v0.9.0. Keep these two pins in lockstep.
+    "verifiers @ git+https://github.com/PrimeIntellect-ai/verifiers.git@b2e4e8157783b2c0dffc7821044c87f29f1c3ccf",
+]
+
+[project.urls]
+Homepage = "https://github.com/stanleyngugi/formally-verified-code-rl"
+Repository = "https://github.com/stanleyngugi/formally-verified-code-rl"
+Documentation = "https://github.com/stanleyngugi/formally-verified-code-rl/tree/main/docs"
+Issues = "https://github.com/stanleyngugi/formally-verified-code-rl/issues"
+
+[project.optional-dependencies]
+test = ["pytest>=8,<9"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/acsl_c", "src/formally_verified_c"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"data/packs/core-v1/tasks.jsonl" = "acsl_c/data/packs/core-v1/tasks.jsonl"
+"data/packs/core-v1/manifest.json" = "acsl_c/data/packs/core-v1/manifest.json"
+"data/packs/core-v1/README.md" = "acsl_c/data/packs/core-v1/README.md"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["acsl_c", "formally_verified_c"]

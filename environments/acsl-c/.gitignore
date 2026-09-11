@@ -1,0 +1,33 @@
+# This file is a publication boundary as well as a local ignore file.
+# Prime CLI reads only the .gitignore at the environment root when building
+# its source archive. Keep research-only corpora and generated diagnostics out.
+
+.venv*/
+.pytest_cache/
+.ruff_cache/
+.frama-c/
+build/
+dist/
+outputs/
+*.egg-info/
+**/__pycache__/
+
+# Research/source-evaluation corpora are not part of the redistributable core.
+data_prev/
+data_vacdemo/
+data/baselines/
+data/quarantine/
+data/train_only/
+data/casp*.jsonl
+data/ingest_report.json
+data/replay_exclusions.jsonl
+data/split_manifest.json
+!data/packs/core-v1/manifest.json
+examples/
+
+# Publish only the compact, reproducible release evidence listed here.
+artifacts/*
+!artifacts/core-v1-public-release-evidence.json
+!artifacts/formally-verified-c-reference-replay.summary.json
+!artifacts/formally-verified-c-negative-replay-qed.jsonl
+!artifacts/formally-verified-c-wheel-audit.json

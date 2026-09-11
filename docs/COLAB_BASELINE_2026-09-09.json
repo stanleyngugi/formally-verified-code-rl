@@ -1,0 +1,112 @@
+{
+  "date": "2026-09-09",
+  "notebook": "Untitled14.ipynb",
+  "runtime": {
+    "gpu": "Tesla T4",
+    "vram_mib": 15360,
+    "python": "3.13.15",
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "unsloth": "2026.9.3",
+    "trl": "0.24.0",
+    "bitsandbytes": "0.50.2",
+    "transformers": "5.5.0"
+  },
+  "command": "python /content/colab_generate_baseline.py --data /content/verified-rl-envs/environments/acsl-c/data/casp_eval.jsonl --split-manifest /content/verified-rl-envs/environments/acsl-c/data/split_manifest.json --split validation --max-tasks 8 --max-new-tokens 512 --output /content/qwen25_coder7b_validation_baseline.jsonl",
+  "data_file": "environments/acsl-c/data/casp_eval.jsonl",
+  "split": "validation",
+  "rows": 8,
+  "completion_tokens": 1001,
+  "model": "unsloth/Qwen2.5-Coder-7B-Instruct-bnb-4bit",
+  "revision": "4858886f896bd05db823557fc5cbc4ac28342af7",
+  "decoding": {
+    "max_seq_length": 2048,
+    "max_new_tokens": 512,
+    "do_sample": false,
+    "model_generation_max_length_cleared": false
+  },
+  "elapsed_seconds": [
+    6.530026054000018,
+    9.722996400999818,
+    1.9014973979999468,
+    0.19815492099996845,
+    8.656291660000079,
+    9.142868454000008,
+    17.59305993099997,
+    8.296145643000045
+  ],
+  "task_ids": [
+    "casp-sha256:00269e8f29e740f1c5780c833233be8c6cd953ef5f2b7bc1cd7078c1d96c7df2",
+    "casp-sha256:10e240a0ddba744bf1a8e85c3354e64d14a4e84bd2574c2f2414f2de05f82ef5",
+    "casp-sha256:1164e8adc1afbfc2b024b95adaa3440188ba4c129fd645b13b874d22aad61cfd",
+    "casp-sha256:11c2e9eabcb5bf00e1001387454829afb487ed516f5c980096b8cba2d1f6eca3",
+    "casp-sha256:2535f993c38418231cee6a588dff7d77b848f2e2e5b49132e1d69bc413a90a5b",
+    "casp-sha256:26a385454b7170e06ea1eea71591040e1df43f58ac081cdd74e59817f735b46b",
+    "casp-sha256:273c88b77eff0090ebbb32c1add513dfeb6c844fc7f603356c4d39fdaeb696e1",
+    "casp-sha256:2d44b03955d869b4ff08441fb791e771319c60d9023981a8996200244c468ca9"
+  ],
+  "artifact": {
+    "filename": "qwen25_coder7b_validation_baseline.jsonl",
+    "bytes_in_colab": 5697,
+    "raw_completion_file_downloaded_to_repo": false
+  },
+  "full_validation_run": {
+    "command": "python /content/colab_generate_baseline.py --data /content/verified-rl-envs/environments/acsl-c/data/casp_eval.jsonl --split-manifest /content/verified-rl-envs/environments/acsl-c/data/split_manifest.json --split validation --max-tasks 47 --max-new-tokens 512 --output /content/qwen25_coder7b_validation_baseline_full.jsonl",
+    "rows": 47,
+    "unique_task_ids": 47,
+    "completion_tokens": 7010,
+    "bytes_in_colab": 36458,
+    "raw_completion_file_downloaded_to_repo": false,
+    "revision": "4858886f896bd05db823557fc5cbc4ac28342af7"
+  },
+  "rollout_shape_experiment": {
+    "purpose": "Generation-only multi-sample rollout-shape probe; candidates are not verifier-scored.",
+    "tasks": 8,
+    "samples_per_task": 4,
+    "rows": 32,
+    "unique_task_ids": 8,
+    "unique_completions": 26,
+    "completion_tokens": 2242,
+    "max_new_tokens": 256,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "seed": 1337,
+    "model_generation_max_length_cleared": false,
+    "revision": "4858886f896bd05db823557fc5cbc4ac28342af7",
+    "artifact_filename": "qwen25_coder7b_validation_rollouts_x4.jsonl",
+    "artifact_bytes_in_colab": 21193,
+    "artifact_sha256": "716433753af3722f6d39e34f4ed42b695e5fd8cfd24ee7d7c611ca9590f7ed98",
+    "raw_completion_file_downloaded_to_repo": false,
+    "notes": "Colab files.download was invoked, but no file appeared in the Windows Downloads directory. Drive mount failed with credential propagation was unsuccessful."
+  },
+  "batched_rollout_memory_probe": {
+    "purpose": "Batched generation capacity probe; candidates are not verifier-scored and this is not optimizer/training evidence.",
+    "batch_size": 4,
+    "task_idx": 9,
+    "prompt_chars": 5020,
+    "prompt_tokens": 1632,
+    "max_new_tokens": 256,
+    "min_new_tokens": 128,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "elapsed_seconds": 78.217,
+    "peak_reserved_gib": 7.27,
+    "used_gib": 7.421,
+    "free_gib": 7.142,
+    "model": "unsloth/Qwen2.5-Coder-7B-Instruct-bnb-4bit",
+    "revision": "4858886f896bd05db823557fc5cbc4ac28342af7",
+    "result": "passed",
+    "notes": "Longest validation skeleton selected for a near-configured-context probe. The result supports generation-only four-sample rollout batching on a 16 GiB T4; production QLoRA/GRPO and verifier topology still require their own run."
+  },
+  "durable_copy_status": {
+    "drive_mount_attempted": true,
+    "drive_mount_error": "credential propagation was unsuccessful",
+    "repo_raw_artifacts_present": false
+  },
+  "post_capture_warning_cleanup": {
+    "verified_on_live_model": true,
+    "model_generation_max_length_cleared": true,
+    "notes": "Cells 17-18 confirmed that mutating the loaded model's generation_config removes the warning without changing explicit max_new_tokens behavior; future captures use the patched scripts."
+  },
+  "interpretation": "Generation and capture evidence only. No Frama-C or Docker scoring was run in managed Colab; verifier replay remains pending on the production Linux/Docker topology."
+}

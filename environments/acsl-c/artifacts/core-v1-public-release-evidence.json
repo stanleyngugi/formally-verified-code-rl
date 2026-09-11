@@ -1,0 +1,54 @@
+{
+  "claim_boundary": "Environment and Core-v1 machine-verification gates pass. This record does not claim model improvement, comprehensive C coverage, or independent human review.",
+  "dataset": {
+    "id": "core-v1",
+    "manifest_sha256": "ad9c3c7f1fad75458a04d8f20a5cab316834aa0111d7dbae54d1e445187c244e",
+    "splits": {
+      "test": 16,
+      "train": 33,
+      "validation": 15
+    },
+    "tasks": 64,
+    "version": "0.1.4"
+  },
+  "date": "2026-09-11",
+  "human_review_gate": false,
+  "negative_evidence": {
+    "artifact_sha256": "9915a46b61093dbf9c598cfadda762a34484df49117d7d00872ed27da8ac6457",
+    "cleanly_rejected": 64,
+    "executed": 64,
+    "ok": true,
+    "policy": "Frama-C WP+RTE with built-in Qed simplifier",
+    "solver_timeouts": 0
+  },
+  "package": {
+    "bundles_casp_data": false,
+    "bundles_core_v1": true,
+    "ok": true,
+    "wheel": "formally_verified_c-0.1.4-py3-none-any.whl",
+    "wheel_sha256": "27e77462fde7d4ddcdaf7a46a3c5aa4a8ad3e05033fb9ec35fe87a04057bfc41",
+    "wheel_size_bytes": 38158
+  },
+  "reference_replay": {
+    "artifact_sha256": "49a7b5d53fc9606e69c48039a7335d8215467c51d2d38b4f3c69b13fe41ad88e",
+    "fully_proved": 64,
+    "goals_proved": 296,
+    "goals_total": 296,
+    "ok": true,
+    "rte_proved": 84,
+    "rte_total": 84,
+    "solver_timeouts": 0,
+    "tool_versions": {
+      "alt_ergo": "v2.6.3",
+      "frama_c": "33.0 (Arsenic)",
+      "why3": "Why3 platform, version 1.8.2",
+      "z3": "Z3 version 4.8.12 - 64 bit"
+    }
+  },
+  "release_stage": "alpha-machine-verified-awaiting-independent-human-review",
+  "schema": "acsl-c-public-release-evidence-v1",
+  "technical_release_gate": true,
+  "tests": {
+    "passed": 42
+  }
+}

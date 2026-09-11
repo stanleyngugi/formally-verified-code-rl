@@ -1,0 +1,9 @@
+verified-rl-envs
+Copyright 2026 Stanley Ngugi and verified-rl-envs contributors
+
+The project-authored Core-v1 data pack is distributed under Apache-2.0.
+CASP-derived research data are not included in the public package or wheel.
+
+Frama-C, Why3, Alt-Ergo, Z3, Prime Intellect Verifiers, and other dependencies
+retain their respective copyrights and licenses. Their names do not imply
+endorsement of this project.

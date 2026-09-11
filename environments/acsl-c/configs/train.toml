@@ -1,0 +1,100 @@
+# Canonical two-GPU GRPO run for prime-rl v0.9.0.
+# GPU 0 trains; GPU 1 serves inference. Build the verifier image first as
+# the pinned GHCR digest below and run Prime's `rl --dry-run` before launch.
+
+max_steps = 500
+# The T4 probe passed Qwen2.5-Coder-7B with 2,048-token LoRA steps. Keep the
+# production context conservative until a full Prime-RL dry-run measures group
+# sampling and inference KV-cache overhead.
+seq_len = 2048
+
+[deployment]
+num_train_gpus = 1
+num_infer_gpus = 1
+
+[model]
+name = "Qwen/Qwen2.5-Coder-7B-Instruct"
+
+[trainer.model.lora]
+rank = 32
+alpha = 64
+
+[trainer.optim]
+lr = 1.0e-5
+
+[orchestrator]
+batch_size = 32
+group_size = 8
+
+[orchestrator.algo]
+type = "grpo"
+
+[orchestrator.train.sampling]
+    max_completion_tokens = 1024
+temperature = 0.9
+
+[[orchestrator.train.source]]
+name = "formally-verified-c-train"
+env.taskset.id = "formally-verified-c"
+env.taskset.split = "train"
+env.taskset.seed = 20260909
+env.taskset.shuffle = true
+env.taskset.curriculum = "none"
+env.taskset.require_non_vacuous = true
+env.taskset.allow_full_mode = false
+env.taskset.task.framac_bin = "frama-c"
+env.taskset.task.provers = "alt-ergo,z3"
+env.taskset.task.wp_timeout = 20
+env.taskset.task.toolchain_id = "frama-c=33.0;why3=1.8.2;alt-ergo=2.6.3;z3=4.8.12;acsl-c-runner=3"
+env.taskset.task.cache_path = "/tmp/acsl-c-cache/verdicts.sqlite3"
+env.taskset.task.agentic = false
+env.agent.harness.id = "null"
+env.agent.runtime.type = "docker"
+env.agent.runtime.image = "ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:5da598c4fa7f1e4210412822f3c3942764baa0057e85070ab5d3b1fadd1ac9dc"
+env.agent.runtime.workdir = "/workspace"
+env.agent.runtime.allow = []
+env.agent.runtime.cpu = 2
+env.agent.runtime.memory = 4
+env.agent.timeout.scoring = 360
+
+[orchestrator.eval]
+interval = 25
+num_examples = -1
+group_size = 1
+
+[orchestrator.eval.sampling]
+    max_completion_tokens = 1024
+temperature = 0.0
+
+[[orchestrator.eval.source]]
+name = "formally-verified-c-validation"
+env.taskset.id = "formally-verified-c"
+env.taskset.split = "validation"
+env.taskset.require_non_vacuous = true
+env.taskset.allow_full_mode = false
+env.taskset.task.agentic = false
+env.agent.harness.id = "null"
+env.agent.runtime.type = "docker"
+env.agent.runtime.image = "ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:5da598c4fa7f1e4210412822f3c3942764baa0057e85070ab5d3b1fadd1ac9dc"
+env.agent.runtime.workdir = "/workspace"
+env.agent.runtime.allow = []
+env.agent.runtime.cpu = 2
+env.agent.runtime.memory = 4
+env.agent.timeout.scoring = 360
+
+[orchestrator.renderer]
+name = "default"
+
+[ckpt]
+interval = 25
+keep_last = 3
+keep_interval = 100
+
+[inference]
+
+[inference.vllm]
+gpu_memory_utilization = 0.85
+    max_model_len = 2048
+
+[env_vars]
+TOKENIZERS_PARALLELISM = "false"

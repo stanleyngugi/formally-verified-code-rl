@@ -1,0 +1,10 @@
+* text=auto
+
+# Keep executable and configuration inputs portable across Windows and Linux.
+*.sh text eol=lf
+Dockerfile text eol=lf
+*.py text eol=lf
+*.toml text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.jsonl text eol=lf

@@ -1,0 +1,43 @@
+# Standalone multi-turn validation evaluation for prime-rl v0.9.0.
+# Start or configure an inference server, then run `uv run evals @ <this file>`.
+
+model = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
+
+[eval]
+num_examples = -1
+group_size = 1
+
+[eval.sampling]
+max_completion_tokens = 2048
+temperature = 0.0
+
+[eval.concurrency]
+min_inflight = 1
+max_inflight = 4
+
+[[eval.source]]
+name = "formally-verified-c-agentic-validation"
+env.taskset.id = "formally-verified-c"
+env.taskset.split = "validation"
+env.taskset.require_non_vacuous = true
+env.taskset.allow_full_mode = false
+env.taskset.task.agentic = true
+env.agent.harness.id = "bash"
+env.agent.harness.edit = true
+env.agent.harness.search = false
+env.agent.runtime.type = "docker"
+env.agent.runtime.image = "ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:5da598c4fa7f1e4210412822f3c3942764baa0057e85070ab5d3b1fadd1ac9dc"
+env.agent.runtime.workdir = "/workspace"
+env.agent.runtime.allow = []
+env.agent.runtime.cpu = 2
+env.agent.runtime.memory = 4
+env.agent.max_turns = 8
+env.agent.max_total_tokens = 16384
+env.agent.timeout.setup = 120
+env.agent.timeout.rollout = 900
+env.agent.timeout.scoring = 360
+
+[eval.client]
+base_url = "http://127.0.0.1:8000/v1"
+
+[monitors.file]

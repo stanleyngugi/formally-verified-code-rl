@@ -1,0 +1,2 @@
+{"id":"accepted-reference","expect_rejected":false,"source":"/*@ ensures \\result == x; */ int id(int x) { return x; }"}
+{"id":"rejected-negative","expect_rejected":true,"source":"/*@ requires x == 1; ensures \\result == x; */ int id(int x) { return 0; }"}
