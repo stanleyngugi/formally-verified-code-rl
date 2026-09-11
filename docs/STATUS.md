@@ -46,7 +46,7 @@ two-GPU throughput work remain follow-on research rather than blockers.
 
 - The canonical GitHub repository is public at
   `https://github.com/stanleyngugi/formally-verified-code-rl`; v0.1.4 is the
-  historical first prerelease and v0.1.6 is the recommended release candidate.
+  historical first prerelease and v0.1.6 is the recommended alpha release.
 - The exact Core-v1 mirror and dataset card are public at
   `https://huggingface.co/datasets/stan4u/formally-verified-c-core-v1`.
 - The rebuilt judge is uploaded at immutable digest

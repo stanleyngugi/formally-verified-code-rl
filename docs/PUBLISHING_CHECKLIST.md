@@ -38,8 +38,8 @@ CASP-bundled corpus or wheel.** The public v0.1 path is `core-v1`; see
       permission or a complete compatible-license provenance map is obtained.
 - [x] Add Apache-2.0 licensing, citation metadata, maintainer/contact, security
       policy, and the canonical repository URL.
-- [x] Push the reviewed commit and v0.1.4 historical prerelease to the public
-      repository; publish v0.1.6 after the final source update.
+- [x] Push reviewed commit `47fa39e` and the v0.1.6 prerelease to the public
+      repository, retaining v0.1.4 as the historical first prerelease.
 - [ ] Change the uploaded GHCR judge package to public. The rebuilt image is
       already uploaded at immutable digest
       `sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593`;
