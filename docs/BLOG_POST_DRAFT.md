@@ -1,4 +1,4 @@
-# Formally Verified C: training code models against proofs, not just tests
+# Formally Verified C: an RL environment that rewards proofs, not only tests
 
 > Publication-ready draft for the first release of
 > [Formally Verified Code RL](https://github.com/stanleyngugi/formally-verified-code-rl).
@@ -7,12 +7,20 @@
 
 ## The short version
 
-I built **Formally Verified C**, a reusable reinforcement-learning and evaluation
-environment in which a model completes C functions under fixed
-[ACSL contracts](https://frama-c.com/acsl.html). The score is computed by
-[Frama-C](https://frama-c.com/)'s weakest-precondition engine and
-runtime-error analysis, not by trusting model-written tests or a textual claim
-that the answer is correct.
+The standard reward signal in code RL is a test suite: a model generates a
+program, the environment runs selected inputs, and passing tests earns reward.
+**Formally Verified C changes the judge.** A model completes a C function under
+a fixed [ACSL contract](https://frama-c.com/acsl.html), and the environment asks
+[Frama-C](https://frama-c.com/)'s weakest-precondition engine to prove that the
+candidate satisfies the contract—including generated runtime-safety
+obligations. Full-proof reward depends on the independently parsed proof result,
+not on a few sampled executions or the model's claim that its answer is correct.
+
+That is the central contribution: a reusable reinforcement-learning and
+evaluation environment in which formal verification is the reward mechanism.
+Unit tests ask whether a program behaved correctly on the cases that ran. This
+judge asks whether the proof obligations hold for all executions covered by the
+contract and the pinned verifier semantics.
 
 The initial public Core-v1 release is deliberately modest in dataset size and
 strong in infrastructure evidence:
@@ -50,19 +58,17 @@ siblings such as `formally-verified-verus` and `formally-verified-dafny`, but
 those should earn their own evidence rather than inheriting the C
 environment's claims.
 
-Many code-reinforcement-learning environments ask a model to write a program,
-run a suite of tests, and use the pass rate as reward. That is useful, but a test
-suite samples behavior. A program can pass every sampled input and still be
-wrong elsewhere. Tests and proofs are complementary: tests can exercise concrete
-system behavior that a model omits, while a deductive proof can cover all states
-represented by a contract and the verifier's semantics.
+Why change the judge? A test suite samples behavior: a program can pass every
+selected input and still be wrong elsewhere. Deductive verification instead
+tries to establish the declared properties over every state represented by the
+contract and verifier semantics. Tests remain complementary because they can
+exercise concrete system behavior that a formal model omits.
 
-This project explores a different judge: deductive verification. The first
-environment, Formally Verified C, gives a model a C function with a fixed ACSL
-contract and asks it to complete only the implementation body. Frama-C's WP
-plugin generates proof obligations, including runtime-error obligations, and
-sends them to pinned automated provers. The reward comes from the independently
-parsed proof result—not from the model's claim that its code is correct.
+Formally Verified C keeps the model's task deliberately narrow: complete only
+the implementation body under a fixed contract. Frama-C's WP plugin generates
+the resulting functional and runtime-error proof obligations and sends them to
+pinned automated provers. This gives the environment a semantic reward channel
+without allowing the model to rewrite the property it is supposed to satisfy.
 
 I would describe this carefully as follows: “To our knowledge, Formally Verified
 C is among the earliest open RL environment packages for generating C
