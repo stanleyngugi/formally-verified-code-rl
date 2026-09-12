@@ -40,18 +40,16 @@ CASP-bundled corpus or wheel.** The public v0.1 path is `core-v1`; see
       policy, and the canonical repository URL.
 - [x] Push reviewed commit `47fa39e` and the v0.1.6 prerelease to the public
       repository, retaining v0.1.4 as the historical first prerelease.
-- [ ] Change the uploaded GHCR judge package to public. The rebuilt image is
-      already uploaded at immutable digest
-      `sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593`;
-      only the Package settings visibility control remains.
+- [x] Publish the GHCR judge at immutable digest
+      `sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593`
+      and confirm a credential-free Docker pull succeeds.
 - [x] Push Prime v0.1.6, pull the exact Hub source archive, confirm the source
       and secret audits, pass 42/42 Linux tests, and construct its public v1
       taskset loader.
-- [ ] Change the Prime listing to public in its Visibility settings. The CLI's
-      `--visibility PUBLIC` is ignored for an already-existing environment.
-- [ ] Publish the blog post after those two listings are anonymous-readable.
-      The draft itself has final artifact URLs and no remaining content
-      placeholder.
+- [x] Make the Prime v0.1.6 listing public and verify `PUBLIC` through the
+      unauthenticated status endpoint.
+- [ ] Complete the final editorial pass and publish the blog post. Its artifact
+      URLs are final and all referenced distribution surfaces are public.
 
 The reason the current wheel cannot be the public wheel is explicit. The
 [CASP dataset card](https://huggingface.co/datasets/nicher92/CASP_dataset/blob/main/README.md)

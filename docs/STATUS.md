@@ -1,4 +1,4 @@
-# Project status — 2026-09-11
+# Project status — 2026-09-12
 
 ## Bottom line
 
@@ -49,19 +49,18 @@ two-GPU throughput work remain follow-on research rather than blockers.
   historical first prerelease and v0.1.6 is the recommended alpha release.
 - The exact Core-v1 mirror and dataset card are public at
   `https://huggingface.co/datasets/stan4u/formally-verified-c-core-v1`.
-- The rebuilt judge is uploaded at immutable digest
+- The rebuilt judge is public at immutable digest
   `sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593`.
-  Its GHCR package is uploaded but still private; GitHub documents package
-  visibility as a Package settings / Danger Zone dashboard action.
-- Prime environment v0.1.6 is uploaded. Its pristine source archive contains no
+  A credential-free Docker pull by digest succeeds.
+- Prime environment v0.1.6 is public. Its pristine source archive contains no
   bytecode or research payload; the source audit passes, 42/42 tests pass, and
-  the public loader constructs a one-task `AcslCTaskset`. The listing remains
-  private because the current CLI applies `--visibility` only when creating a
-  new environment, not when updating an existing one.
+  the public loader constructs a one-task `AcslCTaskset`. Prime's unauthenticated
+  status endpoint reports `PUBLIC` and content hash
+  `a8e90d5be870b7fb8e70f8387786d83754adee83b0b1d9d8335c9b34ea89b8cb`.
 - The in-depth blog draft contains the final names, URLs, evidence, scope,
   limitations, related-work positioning, training-canary interpretation, and
-  roadmap. Publication should follow the two dashboard visibility switches so
-  every installation command in the post works anonymously.
+  roadmap. All linked release surfaces are now public; editorial review and
+  publication of the article are the only remaining launch work.
 
 ## Deliberately deferred
 

@@ -299,9 +299,11 @@ of that interface, not a prerequisite for defining it.
 The clean data boundary is now implemented. Core-v1, its replay and negative
 evidence, and the CASP-excluding wheel audit all pass. GitHub is the canonical
 engineering record, GHCR holds the judge by digest, and Prime's Environments
-Hub provides the installable package and discovery page. Before changing the
-listings to public, I pulled Prime v0.1.6 into a pristine directory: its source
-and secret audits passed, its full Linux suite passed 42/42 tests, and its
+Hub provides the installable package and discovery page. Both listings are
+public, and an anonymous Docker pull of the immutable judge digest succeeds.
+Before changing the listings to public, I pulled Prime v0.1.6 into a pristine
+directory: its source and secret audits passed, its full Linux suite passed
+42/42 tests, and its
 public loader constructed the requested taskset. I inspected a second pristine
 pull before importing its modules and confirmed that the archive itself
 contained neither bytecode nor research-only payloads.
