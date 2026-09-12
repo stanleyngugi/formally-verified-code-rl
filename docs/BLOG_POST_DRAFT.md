@@ -1,4 +1,4 @@
-# Formally Verified C: an RL environment that rewards proofs, not only tests
+# An RL Environment Where C Code Has to Be Proved, Not Just Tested
 
 > Publication-ready draft for the first release of
 > [Formally Verified Code RL](https://github.com/stanleyngugi/formally-verified-code-rl).
