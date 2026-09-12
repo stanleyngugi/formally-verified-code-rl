@@ -57,10 +57,10 @@ two-GPU throughput work remain follow-on research rather than blockers.
   the public loader constructs a one-task `AcslCTaskset`. Prime's unauthenticated
   status endpoint reports `PUBLIC` and content hash
   `a8e90d5be870b7fb8e70f8387786d83754adee83b0b1d9d8335c9b34ea89b8cb`.
-- The in-depth blog draft contains the final names, URLs, evidence, scope,
-  limitations, related-work positioning, training-canary interpretation, and
-  roadmap. All linked release surfaces are now public; editorial review and
-  publication of the article are the only remaining launch work.
+- The publication-ready blog draft contains the final names, verified URLs,
+  evidence, scope, limitations, related-work positioning, GPU-experiment
+  interpretation, and roadmap. All linked release surfaces are public; posting
+  the article on the selected blog platform is the only remaining launch work.
 
 ## Deliberately deferred
 

@@ -1,6 +1,6 @@
 # Formally Verified C: training code models against proofs, not just tests
 
-> Publication draft for the first release of
+> Publication-ready draft for the first release of
 > [Formally Verified Code RL](https://github.com/stanleyngugi/formally-verified-code-rl).
 > This article focuses on the concrete C/ACSL environment. Verus and Dafny are
 > future sibling environments, not capabilities claimed by this release.
@@ -8,8 +8,9 @@
 ## The short version
 
 I built **Formally Verified C**, a reusable reinforcement-learning and evaluation
-environment in which a model completes C functions under fixed ACSL contracts.
-The score is computed by Frama-C's weakest-precondition engine and
+environment in which a model completes C functions under fixed
+[ACSL contracts](https://frama-c.com/acsl.html). The score is computed by
+[Frama-C](https://frama-c.com/)'s weakest-precondition engine and
 runtime-error analysis, not by trusting model-written tests or a textual claim
 that the answer is correct.
 
@@ -18,16 +19,17 @@ strong in infrastructure evidence:
 
 - 64 project-authored, Apache-2.0 tasks with family-isolated train,
   validation, and test splits;
-- 64/64 reference implementations formally discharged under the pinned judge,
-  covering 296/296 proof goals and 84/84 runtime-safety goals with no solver
-  timeouts;
+- 64/64 reference implementations discharged every obligation under the pinned
+  judge: 296/296 proof goals, including 84/84 runtime-safety goals, with no
+  solver timeouts;
 - 64/64 deliberately wrong but parseable implementations rejected by a
   deterministic negative gate;
 - a fail-closed result parser, immutable-contract checks, a policy-keyed cache,
   container isolation, and multi-turn trace history;
-- a Verifiers v1 package that was pushed privately, pulled into a clean
-  directory, audited, installed from that exact downloaded source, and tested
-  42/42 before its public listing;
+- a public Verifiers v1 package that was first pushed privately, pulled into a
+  clean directory, audited, installed from that exact downloaded source, and
+  tested 42/42 before its visibility changed;
+- a public judge image that can be pulled anonymously by immutable digest;
 - no CASP-derived task payload in the public package or Hub source archive.
 
 This is an environment release, not a claim that one GRPO run created a new
@@ -48,37 +50,50 @@ siblings such as `formally-verified-verus` and `formally-verified-dafny`, but
 those should earn their own evidence rather than inheriting the C
 environment's claims.
 
-Most code-reinforcement-learning environments ask a model to write a program,
+Many code-reinforcement-learning environments ask a model to write a program,
 run a suite of tests, and use the pass rate as reward. That is useful, but a test
 suite samples behavior. A program can pass every sampled input and still be
-wrong elsewhere.
+wrong elsewhere. Tests and proofs are complementary: tests can exercise concrete
+system behavior that a model omits, while a deductive proof can cover all states
+represented by a contract and the verifier's semantics.
 
 This project explores a different judge: deductive verification. The first
-environment, Formally Verified C, gives a model a C function with a fixed ACSL contract and
-asks it to complete only the implementation body. Frama-C's WP plugin generates
-proof obligations, including runtime-error obligations, and sends them to
-pinned automated provers. The reward comes from the independently parsed proof
-result—not from the model's claim that its code is correct.
+environment, Formally Verified C, gives a model a C function with a fixed ACSL
+contract and asks it to complete only the implementation body. Frama-C's WP
+plugin generates proof obligations, including runtime-error obligations, and
+sends them to pinned automated provers. The reward comes from the independently
+parsed proof result—not from the model's claim that its code is correct.
 
-I would describe this carefully as follows: “To our knowledge, Formally Verified C is among
-the earliest open RL environment packages for generating C implementations
-from fixed ACSL contracts, with reward computed from Frama-C WP and
-runtime-error proof obligations in an isolated, version-pinned judge.” A dated
-September 2026 literature pass found adjacent verifier-reward work in Dafny and
-Lean, broad vericoding benchmarks in Dafny, Verus/Rust, and Lean, and VeCoGen—the
-closest C predecessor—which already performs iterative LLM generation and
-repair with Frama-C feedback. What the search did not find was a directly
-comparable public C/ACSL/Frama-C **RL environment package**. That search is
-evidence, not proof of nonexistence, so “the first” or “the only one” would be
-needlessly brittle. The contribution is an installable taskset, isolated and
-reproducible scoring, an auditable data boundary, staged reward, multi-turn
-lifecycle, and explicit defenses against common reward-hacking paths—not the
-first ever connection between an LLM and Frama-C.
+I would describe this carefully as follows: “To our knowledge, Formally Verified
+C is among the earliest open RL environment packages for generating C
+implementations from fixed ACSL contracts, with reward computed from Frama-C WP
+and runtime-error proof obligations in an isolated, version-pinned judge.”
+
+A refreshed September 12, 2026 search found verifier-reward work such as
+[Re:Form](https://arxiv.org/abs/2507.16331) in Dafny and
+[RL with recursive inference](https://arxiv.org/abs/2605.30914) in Dafny and
+Lean, alongside a broad
+[vericoding benchmark](https://openreview.net/forum?id=Zgh5kpGAm8) covering
+Dafny, Verus/Rust, and Lean. C/ACSL work also includes
+[evaluation of LLM-generated annotations](https://arxiv.org/abs/2602.13851), a
+different task from completing code under a fixed contract. Most importantly,
+[VeCoGen](https://arxiv.org/abs/2411.19275)—the closest C predecessor—already
+performs iterative LLM generation and repair with Frama-C feedback. What the
+search did not find was a directly comparable public C/ACSL/Frama-C **RL
+environment package**. Search is evidence, not proof of nonexistence, so “the
+first” or “the only one” would be needlessly brittle. The contribution is an
+installable taskset, isolated and reproducible scoring, an auditable data
+boundary, staged reward, multi-turn lifecycle, and explicit defenses against
+common reward-hacking paths—not the first connection between an LLM and
+Frama-C. The repository contains the
+[comparison matrix and search protocol](https://github.com/stanleyngugi/formally-verified-code-rl/blob/main/docs/RELATED_WORK.md)
+behind that scoped claim.
 
 ## Where the problems come from
 
 The prompts do not invent the problems. During environment development, each
-research task started from a CASP C/ACSL source record. Ingestion ran the
+research task started from a
+[CASP](https://arxiv.org/abs/2508.18798) C/ACSL source record. Ingestion ran the
 complete source under the pinned Frama-C policy, probed for vacuous or
 inconclusive specifications, and recorded why rejected records were
 quarantined. For an admitted task, the target body was removed and replaced by
@@ -130,6 +145,13 @@ int increment(int x) {
 }
 ```
 
+In ACSL, `requires` states the assumptions a caller must satisfy, `ensures`
+states what the function promises on return, and `assigns` limits which memory
+locations it may change. The proof is therefore conditional: it establishes
+the postcondition for calls covered by the precondition and under the pinned C
+and verifier models. It does not establish that the contract perfectly captures
+an unstated human intention.
+
 The model must return the completed C file. The fixed-contract integrity layer
 checks that annotations, declarations, includes, and non-target code have not
 changed. Only then does the judge invoke Frama-C. This prevents an apparently
@@ -164,15 +186,18 @@ The components are intentionally not interchangeable. The gate prevents a
 zero-goal or malformed report from earning credit. Fractional VC progress gives
 a learner a denser signal. Full proof distinguishes complete semantic success
 from partial progress. The integrity term prevents reward from being earned by
-changing the problem. A timeout, process crash, missing JSON report, malformed
-Boolean, or empty goal set is a failure—not partial proof.
+changing the problem. A process crash, missing report, malformed Boolean, or
+empty goal set cannot manufacture proof. A timeout cannot earn full-proof or
+specification-strength credit and is never cached; if some obligations were
+proved before the timeout, the VC fraction reports only that partial progress.
 
 For the released fixed-contract task family, specification strength means that
 all annotations and all code outside the target body remain unchanged. The
 model cannot earn an easier proof by deleting or weakening the postcondition.
-A future full-specification-synthesis family would need stronger semantic tests;
-that mode is deliberately disabled even though the executor contract now has a
-clean accepted control and rejected negative fixture.
+A future full-specification-synthesis family would need stronger semantic tests.
+That mode is deliberately disabled. The current clean positive and negative
+executor fixtures show that the machinery can run such tests; they are not yet
+broad enough to establish the strength of model-written specifications.
 
 Operational metrics—timeouts, crashes, failed goals, source digests, and the
 per-turn verdict history—stay separate from reward. This matters for credit
@@ -192,6 +217,22 @@ judge still has an attack surface:
 - Model-controlled code and preprocessor directives must not run on the host.
 - The final judge must ignore agent-edited diagnostic scripts.
 - Concurrent workers must not corrupt or cross-contaminate the verdict cache.
+
+These were not hypothetical concerns. In the CASP-derived research corpus, 61
+of 399 candidates that re-verified also proved after their bodies were replaced
+by trivial stubs, so they were quarantined as vacuous. Replaying under the
+pinned toolchain also changed the status of 65 out of 464 source pairs relative
+to the older verification setup. Neither number is a claim about the public
+Core-v1 pack; both are evidence that task admission must rerun the exact judge
+rather than trust inherited labels.
+
+Solver policy also turned out to include operational conditions. One 112-goal
+research reference passed, timed out under a four-worker replay, and then passed
+again cold and alone. Another reference missed one goal at the release policy's
+20-second limit but completed at 60 seconds. The environment therefore defines
+eligibility using a cold, one-worker replay with the same timeout used for
+reward. A container digest fixes binaries; reproducible reward also needs the
+prover list, timeout, cache policy, and concurrency policy.
 
 The release runner therefore executes in a bounded container with an empty
 network allow-list. A smoke probe confirmed both that direct egress is blocked
@@ -236,7 +277,8 @@ but finding them is part of what “reproducible environment” should mean.
 
 ## Evidence at release time
 
-The public v0.1 evidence as of 2026-09-11 is:
+The machine-verification evidence was frozen for v0.1.6 on 2026-09-11; public
+visibility was confirmed on 2026-09-12. The public release evidence is:
 
 - Core-v1 contains 64 project-authored Apache-2.0 tasks: 33 train, 15
   validation, and 16 test, with derivation families confined to one split.
@@ -255,8 +297,8 @@ corpus claim:
 
 - The CASP research split contains 221 training, 47 validation, and 48 fresh
   test tasks: 316 admitted tasks total, with 22 exclusions recorded.
-- A cold serial replay proved all 316 references: 5,205/5,205 proof goals and
-  1,264/1,264 runtime-error goals, with zero solver timeouts.
+- A cold serial replay proved all 316 references: 5,205/5,205 total goals,
+  including 1,264/1,264 runtime-error goals, with zero solver timeouts.
 - The judge image is pinned at
   `sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593`.
 - Prime-RL v0.9.0 and its exact vendored Verifiers revision resolve the training
@@ -271,20 +313,38 @@ digests. The older `release_evidence_2026-09-10.json` is explicitly a
 research-engineering record for the non-public CASP adapter and must not be
 cited as the public corpus count.
 
-## What the Colab GPU established—and did not establish
+## What the GPU experiments established—and did not establish
 
-The model side was tested on a 16 GB-class Tesla T4. A 4-bit
-Qwen2.5-Coder-7B model with LoRA completed generation plus optimizer steps, and
-a serial two-rollout/one-update plumbing canary completed under the memory
-budget. A 14B 4-bit model also fit a shorter 1,024-token probe, but 7B at 2,048
-tokens leaves substantially more headroom for rollout generation and is the
-more practical default.
+The project has two different kinds of GPU evidence. An early 12-step RunPod
+engineering smoke used Qwen2.5-Coder-1.5B and a patched single-GPU stack on an
+RTX A4000. Roughly 190 episodes traversed the real end-to-end path—model,
+Verifiers harness, Frama-C proof, reward, and GRPO update—with a zero-percent
+scoring error rate. Observed batch reward rose from 0.375 to 0.875.
 
-Those experiments establish feasibility, not learning. The serial plumbing
-rewards were explicitly labelled `stub_not_verifier` because managed Colab did
-not host the Docker judge. There is no claim here that GRPO improved proof rate.
-Making that claim would require frozen checkpoint selection, verifier-scored
-rollouts, multiple seeds, and a one-time held-out test evaluation.
+That curve is not evidence of a causal learning improvement. The research tasks
+were streamed in an order correlated with difficulty, no frozen paired baseline
+or checkpoint was retained, and the run predates the current Prime-RL pin and
+public Core-v1 release. What it establishes is narrower and still useful: the
+original architecture connected a model, real proof judge, and optimizer rather
+than stopping at an offline parser demonstration.
+
+The later managed-Colab work tested a larger model and the one-GPU memory
+envelope. On a 15,360 MiB Tesla T4, a 4-bit
+Qwen2.5-Coder-7B model loaded in 5.39 GiB and peaked at 7.61 GiB during a real
+LoRA optimizer step at a 2,048-token context. Adapter save/reload and a serial
+two-rollout/one-update plumbing canary also completed within the memory budget.
+A 14B 4-bit model reached a 12.16 GiB optimizer peak in a shorter 1,024-token
+probe, leaving much less room for multiple rollouts and framework overhead. The
+7B model is therefore the practical one-T4 default; the 14B result is a bounded
+feasibility observation, not a recommendation for full GRPO on that GPU.
+
+Those Colab experiments establish model-side feasibility, not learning. Their
+serial plumbing rewards were explicitly labelled `stub_not_verifier` because
+managed Colab did not host the Docker judge. Neither the historical RunPod curve
+nor the later Colab canary supports a claim that GRPO improved held-out proof
+rate. Making that claim would require frozen checkpoint selection,
+verifier-scored rollouts under the release judge, multiple seeds, and a one-time
+held-out test evaluation.
 
 This distinction is useful beyond this project. An environment can be correct,
 publishable infrastructure without already proving that a particular training
@@ -303,10 +363,9 @@ Hub provides the installable package and discovery page. Both listings are
 public, and an anonymous Docker pull of the immutable judge digest succeeds.
 Before changing the listings to public, I pulled Prime v0.1.6 into a pristine
 directory: its source and secret audits passed, its full Linux suite passed
-42/42 tests, and its
-public loader constructed the requested taskset. I inspected a second pristine
-pull before importing its modules and confirmed that the archive itself
-contained neither bytecode nor research-only payloads.
+42/42 tests, and its public loader constructed the requested taskset. I
+inspected a second pristine pull before importing its modules and confirmed
+that the archive itself contained neither bytecode nor research-only payloads.
 
 The CASP permission/provenance request continues in parallel. If it is resolved,
 the 316-task validated corpus can become a separately versioned expansion pack
@@ -326,7 +385,7 @@ means what it says.
 
 ## Try the released environment
 
-The three publication surfaces have different jobs:
+The four publication surfaces have different jobs:
 
 - [GitHub](https://github.com/stanleyngugi/formally-verified-code-rl) is the
   canonical source, design history, evidence, and issue tracker.
@@ -334,11 +393,14 @@ The three publication surfaces have different jobs:
   is the installable Verifiers v1 environment and discovery page.
 - [Hugging Face](https://huggingface.co/datasets/stan4u/formally-verified-c-core-v1)
   mirrors the exact redistributable Core-v1 data and dataset card.
+- [GitHub Container Registry](https://github.com/users/stanleyngugi/packages/container/package/formally-verified-c-judge)
+  serves the pinned Frama-C judge image; the release uses its immutable digest,
+  not only a mutable tag.
 
 With Python 3.11–3.13 and `uv`/Prime installed:
 
 ```bash
-prime env install stanley-ngugi/formally-verified-c
+prime env install stanley-ngugi/formally-verified-c@latest
 ```
 
 The recommended environment package is v0.1.6. Core-v1 remains dataset v0.1.4
@@ -357,6 +419,11 @@ uv run pytest -q
 The pinned judge image is published as
 `ghcr.io/stanleyngugi/formally-verified-c-judge:0.1.4`. The immutable release
 reference is `ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593`.
+It can be pulled anonymously:
+
+```bash
+docker pull ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593
+```
 
 ## What this release claims—and what it does not
 
@@ -364,7 +431,7 @@ It is reasonable to say:
 
 - this is a technically validated, reusable RL/evaluation environment for C
   completion under fixed ACSL contracts;
-- successful reward is backed by Frama-C WP+RTE proof obligations under the
+- full-proof reward is backed by Frama-C WP+RTE proof obligations under the
   declared pinned policy;
 - the public Core-v1 references and negative controls pass the published
   machine-verification gates;
@@ -396,6 +463,14 @@ and controlled comparisons of single-turn versus agentic repair. If CASP's
 record-level provenance or permission becomes sufficient, its already replayed
 316-task research corpus can become an explicitly attributed expansion pack;
 it will not silently replace Core-v1.
+
+The source audit also identified concrete expansion routes. ACSL by Example is
+MIT-licensed and can become a separately attributed pack after extraction and
+Frama-C 33 replay. X509-parser offers a BSD licensing option but is better suited
+to a future multi-file, long-horizon environment than isolated function tasks.
+SV-COMP-derived ACSL material has mixed file-level licensing and needs a
+machine-checked provenance join. Other tempting collections remain link-only
+until their authors clarify licenses or record-level origins.
 
 Only after the environment and evaluation protocol are frozen does a larger
 GRPO study become scientifically useful: multiple seeds, verifier-scored

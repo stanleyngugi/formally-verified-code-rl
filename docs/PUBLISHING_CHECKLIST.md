@@ -48,8 +48,10 @@ CASP-bundled corpus or wheel.** The public v0.1 path is `core-v1`; see
       taskset loader.
 - [x] Make the Prime v0.1.6 listing public and verify `PUBLIC` through the
       unauthenticated status endpoint.
-- [ ] Complete the final editorial pass and publish the blog post. Its artifact
-      URLs are final and all referenced distribution surfaces are public.
+- [x] Complete the final editorial and claim-accuracy pass on the blog draft;
+      verify its artifact links and refresh the scoped novelty search.
+- [ ] Publish the blog post and add its canonical URL to the repository README
+      and release description. All referenced distribution surfaces are public.
 
 The reason the current wheel cannot be the public wheel is explicit. The
 [CASP dataset card](https://huggingface.co/datasets/nicher92/CASP_dataset/blob/main/README.md)
