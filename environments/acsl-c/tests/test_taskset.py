@@ -96,6 +96,38 @@ class TimeoutRuntime:
         )
 
 
+class ContradictoryRuntime:
+    """Return proof-looking counts with a failing process status."""
+
+    def __init__(self):
+        self.calls = 0
+        self.files = {}
+
+    async def write(self, path, data):
+        self.files[path] = data
+
+    async def run(self, argv, env):
+        if argv[:2] == ["rm", "-f"]:
+            self.files.pop(argv[2], None)
+            return SimpleNamespace(stdout="", stderr="", exit_code=0)
+        self.calls += 1
+        verdict = {
+            "ok": True,
+            "parse_ok": True,
+            "compiled": True,
+            "goals_proved": 4,
+            "goals_total": 4,
+            "timeouts": 0,
+            "failures": [],
+            "crash": None,
+        }
+        return SimpleNamespace(
+            stdout=json.dumps({"verdict": verdict, "exit_code": 7}),
+            stderr="runner failed after producing a report",
+            exit_code=7,
+        )
+
+
 class WorkspaceRuntime:
     def __init__(self):
         self.files = {}
@@ -287,6 +319,21 @@ def test_solver_timeout_is_not_proof_and_is_not_cached():
             SimpleNamespace(last_reply=task.data.reference_solution, info={}), runtime
         )
         assert first == second == 0.0
+        assert runtime.calls == 2
+
+    asyncio.run(exercise())
+
+
+def test_contradictory_nonzero_exit_is_not_rewarded_or_cached():
+    async def exercise():
+        task = one_task()
+        task.config.toolchain_id += ";test=nonzero-exit-cache"
+        runtime = ContradictoryRuntime()
+        first = await task._run_source(task.data.reference_solution, runtime)
+        second = await task._run_source(task.data.reference_solution, runtime)
+        assert not first.ok and not second.ok
+        assert first.fraction == second.fraction == 0.0
+        assert first.exit_code == second.exit_code == 7
         assert runtime.calls == 2
 
     asyncio.run(exercise())

@@ -21,9 +21,17 @@ RESULTS_LINE_RE = re.compile(
 )
 
 
+def _nonnegative_int(value: object) -> bool:
+    """Return whether *value* is an integer count rather than a truthy bool."""
+
+    return type(value) is int and value >= 0
+
+
 @dataclass
 class Verdict:
-    ok: bool
+    # Default to failure so incomplete or forward-incompatible reports cannot
+    # raise past the reward boundary or accidentally manufacture success.
+    ok: bool = False
     parse_ok: bool = False
     compiled: bool = False
     goals_total: int = 0
@@ -38,8 +46,50 @@ class Verdict:
     stderr_tail: str = ""
 
     @property
+    def progress_eligible(self) -> bool:
+        """Whether parsed goal counts are safe to expose as partial progress."""
+
+        counts_are_valid = (
+            _nonnegative_int(self.goals_total)
+            and _nonnegative_int(self.goals_proved)
+            and _nonnegative_int(self.rte_total)
+            and _nonnegative_int(self.rte_proved)
+            and _nonnegative_int(self.timeouts)
+            and self.goals_proved <= self.goals_total
+            and self.rte_proved <= self.rte_total <= self.goals_total
+            and isinstance(self.failures, list)
+        )
+        exit_is_valid = self.exit_code is None or (
+            type(self.exit_code) is int and self.exit_code == 0
+        )
+        return (
+            self.parse_ok is True
+            and self.compiled is True
+            and counts_are_valid
+            and self.goals_total > 0
+            and self.crash is None
+            and exit_is_valid
+        )
+
+    def reconcile_ok(self, *, declared_ok: object | None = None) -> Verdict:
+        """Recompute full-proof status from all fail-closed verdict invariants.
+
+        ``declared_ok`` preserves an upstream negative verdict but can never
+        turn structurally inconsistent fields into success.
+        """
+
+        full_proof = (
+            self.progress_eligible
+            and self.timeouts == 0
+            and self.goals_proved == self.goals_total
+            and not self.failures
+        )
+        self.ok = full_proof and (declared_ok is None or declared_ok is True)
+        return self
+
+    @property
     def fraction(self) -> float:
-        if self.goals_total == 0:
+        if not self.progress_eligible:
             return 0.0
         return self.goals_proved / self.goals_total
 
@@ -78,7 +128,17 @@ class Verdict:
             "stdout_tail",
             "stderr_tail",
         }
-        return cls(**{key: value for key, value in payload.items() if key in fields})
+        verdict = cls(
+            **{key: value for key, value in payload.items() if key in fields}
+        )
+        declared_failures = payload.get("n_failures")
+        if declared_failures is not None and (
+            not _nonnegative_int(declared_failures)
+            or not isinstance(verdict.failures, list)
+            or declared_failures != len(verdict.failures)
+        ):
+            verdict.parse_ok = False
+        return verdict.reconcile_ok(declared_ok=payload.get("ok") is True)
 
 
 def from_wp_report_json(payload: str) -> Verdict | None:
@@ -90,7 +150,13 @@ def from_wp_report_json(payload: str) -> Verdict | None:
         return None
     v = Verdict(ok=False, parse_ok=True, compiled=True)
     for rec in records:
-        if not isinstance(rec, dict) or rec.get("smoke"):
+        if not isinstance(rec, dict):
+            v.parse_ok = False
+            continue
+        smoke_field = rec.get("smoke", False)
+        if not isinstance(smoke_field, bool):
+            v.parse_ok = False
+        if smoke_field is True:
             continue
         # Frama-C emits a JSON boolean. Do not let malformed strings such as
         # ``"false"`` become truthy and manufacture a proof.
@@ -110,11 +176,11 @@ def from_wp_report_json(payload: str) -> Verdict | None:
             if "timeout" in name or "t" == name.strip():
                 pass
         timeout_field = rec.get("timeout", 0)
-        try:
-            timeout = int(timeout_field)
-        except (TypeError, ValueError):
+        if not _nonnegative_int(timeout_field):
             v.parse_ok = False
             timeout = 0
+        else:
+            timeout = timeout_field
         if timeout > 0:
             v.timeouts += timeout
         if not passed and len(v.failures) < 20:
@@ -127,8 +193,7 @@ def from_wp_report_json(payload: str) -> Verdict | None:
                     "verdict": rec.get("verdict"),
                 }
             )
-    v.ok = v.parse_ok and v.goals_total > 0 and v.goals_proved == v.goals_total
-    return v
+    return v.reconcile_ok()
 
 
 def from_stdout(stdout: str) -> Verdict | None:
@@ -137,13 +202,13 @@ def from_stdout(stdout: str) -> Verdict | None:
         return None
     proved, total = int(m.group(1)), int(m.group(2))
     v = Verdict(
-        ok=total > 0 and proved == total,
+        ok=False,
         parse_ok=True,
-        compiled="error" not in stdout[:2000].lower() or proved > 0,
+        compiled="error" not in stdout[:2000].lower(),
         goals_proved=proved,
         goals_total=total,
     )
-    return v
+    return v.reconcile_ok()
 
 
 def parse(wp_report_json: str | None = None, stdout: str = "") -> Verdict:
@@ -168,8 +233,15 @@ def from_runner_output(stdout: str, *, exit_code: int | None = None) -> Verdict:
             continue
         if isinstance(payload.get("verdict"), dict):
             verdict = Verdict.from_dict(payload["verdict"])
-            verdict.exit_code = payload.get("exit_code", exit_code)
-            return verdict
+            reported_exit = payload.get("exit_code")
+            # A nonzero outer runner exit cannot be hidden by a nominally
+            # successful embedded Frama-C result.
+            verdict.exit_code = (
+                exit_code
+                if exit_code is not None and exit_code != 0
+                else reported_exit
+            )
+            return verdict.reconcile_ok(declared_ok=verdict.ok)
         if payload.get("error"):
             return Verdict(
                 ok=False,

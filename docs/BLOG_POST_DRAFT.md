@@ -1,10 +1,5 @@
 # An RL Environment Where C Code Has to Be Proved, Not Just Tested
 
-> Publication-ready draft for the first release of
-> [Formally Verified Code RL](https://github.com/stanleyngugi/formally-verified-code-rl).
-> This article focuses on the concrete C/ACSL environment. Verus and Dafny are
-> future sibling environments, not capabilities claimed by this release.
-
 ## The short version
 
 The standard reward signal in code RL is a test suite: a model generates a
@@ -34,9 +29,8 @@ strong in infrastructure evidence:
   deterministic negative gate;
 - a fail-closed result parser, immutable-contract checks, a policy-keyed cache,
   container isolation, and multi-turn trace history;
-- a public Verifiers v1 package that was first pushed privately, pulled into a
-  clean directory, audited, installed from that exact downloaded source, and
-  tested 42/42 before its visibility changed;
+- a public Verifiers v1 package whose exact v0.1.7 Hub source was pulled into a
+  clean directory, audited before import, and tested 57/57;
 - a public judge image that can be pulled anonymously by immutable digest;
 - no CASP-derived task payload in the public package or Hub source archive.
 
@@ -70,7 +64,7 @@ the resulting functional and runtime-error proof obligations and sends them to
 pinned automated provers. This gives the environment a semantic reward channel
 without allowing the model to rewrite the property it is supposed to satisfy.
 
-I would describe this carefully as follows: “To our knowledge, Formally Verified
+I would describe this carefully as follows: “To my knowledge, Formally Verified
 C is among the earliest open RL environment packages for generating C
 implementations from fixed ACSL contracts, with reward computed from Frama-C WP
 and runtime-error proof obligations in an isolated, version-pinned judge.”
@@ -185,17 +179,25 @@ The released default weights are:
 0.10 * parse_compile_and_nonempty_goal_gate
 + 0.50 * proved_verification_condition_fraction
 + 0.20 * all_goals_fully_proved
-+ 0.20 * fixed_specification_integrity
++ 0.20 * proof_gated_fixed_contract_integrity
 ```
 
 The components are intentionally not interchangeable. The gate prevents a
-zero-goal or malformed report from earning credit. Fractional VC progress gives
-a learner a denser signal. Full proof distinguishes complete semantic success
-from partial progress. The integrity term prevents reward from being earned by
-changing the problem. A process crash, missing report, malformed Boolean, or
-empty goal set cannot manufacture proof. A timeout cannot earn full-proof or
-specification-strength credit and is never cached; if some obligations were
-proved before the timeout, the VC fraction reports only that partial progress.
+zero-goal, uncompiled, malformed, crashed, or nonzero-exit report from earning
+credit. Fractional VC progress gives a learner a denser signal. Full proof
+distinguishes complete semantic success from partial progress. The integrity
+check prevents reward from being earned by changing the problem.
+
+The final 0.20 component is intentionally conservative rather than independent:
+in fixed-contract mode it is awarded only when the immutable context is intact
+**and** the candidate has already earned a clean full-proof verdict. An
+integrity violation short-circuits the verifier and zeros every component, while
+an intact but only partially proved candidate gets no specification-strength
+credit. A timeout cannot earn full-proof or specification-strength credit and
+is never cached; if the process exits cleanly and reports consistent partial
+counts, the gate and VC fraction may still expose only that partial progress.
+The environment therefore rewards useful progress without relabelling an
+inconclusive run as proof.
 
 For the released fixed-contract task family, specification strength means that
 all annotations and all code outside the target body remain unchanged. The
@@ -217,7 +219,8 @@ judge still has an attack surface:
 
 - A malformed JSON field such as the string `"false"` must never be treated as
   Boolean success.
-- A crash, timeout, missing report, or zero-goal report must fail closed.
+- A crash, timeout, missing report, uncompiled result, nonzero exit, impossible
+  goal count, inconsistent failure count, or zero-goal report must fail closed.
 - A cached verdict must be invalidated when the source, solver policy, timeout,
   toolchain, or exact runner script changes.
 - Model-controlled code and preprocessor directives must not run on the host.
@@ -278,13 +281,15 @@ license text. A later clean pull built successfully.
 Third, several tests still addressed the private CASP research split. They
 passed locally and failed correctly in the public-only archive. Those tests now
 exercise the bundled Core-v1 manifest, so the exact source downloaded from the
-Hub passes all 42 tests without private data. These are mundane packaging bugs,
+Hub passes all 57 tests without private data. These are mundane packaging bugs,
 but finding them is part of what “reproducible environment” should mean.
 
 ## Evidence at release time
 
-The machine-verification evidence was frozen for v0.1.6 on 2026-09-11; public
-visibility was confirmed on 2026-09-12. The public release evidence is:
+The corpus-verification evidence was frozen for Core-v1 on 2026-09-11. The
+fail-closed verdict invariants were hardened in environment v0.1.7 and the
+updated public artifact was verified on 2026-09-13. The public release evidence
+is:
 
 - Core-v1 contains 64 project-authored Apache-2.0 tasks: 33 train, 15
   validation, and 16 test, with derivation families confined to one split.
@@ -294,7 +299,7 @@ visibility was confirmed on 2026-09-12. The public release evidence is:
   deterministic WP+RTE/Qed negative gate with zero timeouts.
 - The clean wheel exports the Verifiers v1 package loaders, loads Core-v1 from
   site-packages, and contains no CASP-derived task payload.
-- The local suite passes 42 tests across parsing, integrity, task loading,
+- The local suite passes 57 tests across parsing, integrity, task loading,
   provenance, payload auditing, spectests, caching, concurrency, preflight
   behavior, and trace history.
 
@@ -367,11 +372,14 @@ evidence, and the CASP-excluding wheel audit all pass. GitHub is the canonical
 engineering record, GHCR holds the judge by digest, and Prime's Environments
 Hub provides the installable package and discovery page. Both listings are
 public, and an anonymous Docker pull of the immutable judge digest succeeds.
-Before changing the listings to public, I pulled Prime v0.1.6 into a pristine
-directory: its source and secret audits passed, its full Linux suite passed
-42/42 tests, and its public loader constructed the requested taskset. I
+Before changing the original listing to public, I pulled Prime v0.1.6 into a
+pristine directory: its source and secret audits passed, its full Linux suite
+passed 42/42 tests, and its public loader constructed the requested taskset. I
 inspected a second pristine pull before importing its modules and confirmed
 that the archive itself contained neither bytecode nor research-only payloads.
+After hardening verdict reconciliation in v0.1.7, I repeated that outsider test
+against the exact public Hub source: its pre-import audits passed, all 57 tests
+passed, and the loader constructed all 64 Core-v1 tasks.
 
 The CASP permission/provenance request continues in parallel. If it is resolved,
 the 316-task validated corpus can become a separately versioned expansion pack
@@ -409,9 +417,16 @@ With Python 3.11–3.13 and `uv`/Prime installed:
 prime env install stanley-ngugi/formally-verified-c@latest
 ```
 
-The recommended environment package is v0.1.6. Core-v1 remains dataset v0.1.4
-because the two intervening package releases changed runtime identity and
-archive hygiene, not any task record or split.
+The recommended environment package is v0.1.7. Core-v1 remains dataset v0.1.4
+because later package releases changed runtime identity, archive hygiene, and
+fail-closed verdict reconciliation—not any task record or split.
+
+The canonical v0.1.7 GitHub release wheel has SHA-256
+`5afae1e9078de85f0ecb4b0c26d918c0e39c33f7cecc7f0dfadcc7596eadc68d`.
+Prime rebuilds a wheel during upload; its archive has SHA-256
+`9917cf2d7c570bdc49983d04395c1fe6c7249691e9f518b01eb2edf54c3416a0`.
+The two archives contain the same 16 paths with byte-identical member contents;
+only their outer ZIP metadata differs.
 
 For source development:
 

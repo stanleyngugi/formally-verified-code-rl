@@ -21,7 +21,8 @@ CASP-bundled corpus or wheel.** The public v0.1 path is `core-v1`; see
 - [x] Docker smoke proves a reference while direct network egress is blocked
       and the host workspace is absent.
 - [x] Fail-closed parser, integrity, cache/concurrency, fake-output, timeout,
-      trace rollback, and negative-case checks pass in the 42-test suite on
+      trace rollback, contradictory-report, and negative-case checks pass in
+      the 57-test suite on
       Linux, the supported Verifiers v1 platform.
 - [x] Image digest, task manifest digest, tool versions, commands, and compact
       result artifacts are retained under `environments/acsl-c/artifacts/`.
@@ -48,6 +49,9 @@ CASP-bundled corpus or wheel.** The public v0.1 path is `core-v1`; see
       taskset loader.
 - [x] Make the Prime v0.1.6 listing public and verify `PUBLIC` through the
       unauthenticated status endpoint.
+- [x] Publish the fail-closed verdict-reconciliation patch as v0.1.7, pull the
+      exact public Hub source before import, pass its source/secret/payload
+      audits and 57/57 Linux tests, and load all 64 bundled Core-v1 tasks.
 - [x] Complete the final editorial and claim-accuracy pass on the blog draft;
       verify its artifact links and refresh the scoped novelty search.
 - [ ] Publish the blog post and add its canonical URL to the repository README

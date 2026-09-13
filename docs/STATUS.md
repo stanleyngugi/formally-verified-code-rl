@@ -1,4 +1,4 @@
-# Project status — 2026-09-12
+# Project status — 2026-09-13
 
 ## Bottom line
 
@@ -31,7 +31,7 @@ two-GPU throughput work remain follow-on research rather than blockers.
   standard `SingleAgentEnv` without a repository data path.
 - The public wheel bundles Core-v1 and its dataset card, manifest, and task
   records; its payload audit finds no CASP data.
-- Full local suite: 42 passed; Ruff and Python compilation checks pass.
+- Full local suite: 57 passed; Ruff and Python compilation checks pass.
 - Apache-2.0 license, notice, citation, security policy, contribution guide,
   maintainer identity, repository URL, dataset card, blog draft, and
   machine-readable public-release evidence are present.
@@ -46,17 +46,16 @@ two-GPU throughput work remain follow-on research rather than blockers.
 
 - The canonical GitHub repository is public at
   `https://github.com/stanleyngugi/formally-verified-code-rl`; v0.1.4 is the
-  historical first prerelease and v0.1.6 is the recommended alpha release.
+  historical first prerelease and v0.1.7 is the recommended alpha release.
 - The exact Core-v1 mirror and dataset card are public at
   `https://huggingface.co/datasets/stan4u/formally-verified-c-core-v1`.
 - The rebuilt judge is public at immutable digest
   `sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593`.
   A credential-free Docker pull by digest succeeds.
-- Prime environment v0.1.6 is public. Its pristine source archive contains no
-  bytecode or research payload; the source audit passes, 42/42 tests pass, and
-  the public loader constructs a one-task `AcslCTaskset`. Prime's unauthenticated
-  status endpoint reports `PUBLIC` and content hash
-  `a8e90d5be870b7fb8e70f8387786d83754adee83b0b1d9d8335c9b34ea89b8cb`.
+- Prime environment v0.1.7 is public. Its pristine source archive contains no
+  pre-import bytecode or research payload; source and secret audits pass, 57/57
+  tests pass, and the public loader constructs all 64 Core-v1 tasks. Prime
+  reports `PUBLIC` and content hash prefix `4fe4927e56c6`.
 - The publication-ready blog draft contains the final names, verified URLs,
   evidence, scope, limitations, related-work positioning, GPU-experiment
   interpretation, and roadmap. All linked release surfaces are public; posting

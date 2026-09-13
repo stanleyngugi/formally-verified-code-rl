@@ -241,7 +241,7 @@ class AcslCTask(Task[AcslCData, State, AcslCTaskConfig]):
         # Do not fossilize transient infrastructure failures or solver timeouts.
         # Complete reports without timeouts are deterministic enough for reuse
         # under the fully keyed toolchain policy.
-        cacheable = verdict.parse_ok and verdict.crash is None and verdict.timeouts == 0
+        cacheable = verdict.progress_eligible and verdict.timeouts == 0
         if cacheable:
             self._memory_cache[key] = verdict
         if cache is not None and cacheable:
@@ -306,12 +306,7 @@ class AcslCTask(Task[AcslCData, State, AcslCTaskConfig]):
     @reward(weight=WEIGHT_GATE)
     async def acsl_gate(self, trace: Trace, runtime: Runtime) -> float:
         _, verdict, integrity = await self._eligible_verdict(trace, runtime)
-        return float(
-            integrity.ok
-            and verdict.parse_ok
-            and verdict.crash is None
-            and verdict.goals_total > 0
-        )
+        return float(integrity.ok and verdict.progress_eligible)
 
     @reward(weight=WEIGHT_VC_FRACTION)
     async def acsl_vc_fraction(self, trace: Trace, runtime: Runtime) -> float:

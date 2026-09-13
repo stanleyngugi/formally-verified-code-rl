@@ -28,6 +28,44 @@ TIMEOUT = int(os.environ.get("ACSL_TIMEOUT", "20"))
 SUMMARY_RE = re.compile(r"Proved goals:\s*(\d+)\s*/\s*(\d+)")
 
 
+def _nonnegative_int(value: object) -> bool:
+    return type(value) is int and value >= 0
+
+
+def _progress_eligible(verdict: dict) -> bool:
+    counts_are_valid = (
+        _nonnegative_int(verdict.get("goals_total"))
+        and _nonnegative_int(verdict.get("goals_proved"))
+        and _nonnegative_int(verdict.get("rte_total"))
+        and _nonnegative_int(verdict.get("rte_proved"))
+        and _nonnegative_int(verdict.get("timeouts"))
+        and verdict["goals_proved"] <= verdict["goals_total"]
+        and verdict["rte_proved"] <= verdict["rte_total"] <= verdict["goals_total"]
+        and isinstance(verdict.get("failures"), list)
+    )
+    exit_code = verdict.get("exit_code")
+    exit_is_valid = exit_code is None or (
+        type(exit_code) is int and exit_code == 0
+    )
+    return (
+        verdict.get("parse_ok") is True
+        and verdict.get("compiled") is True
+        and counts_are_valid
+        and verdict["goals_total"] > 0
+        and verdict.get("crash") is None
+        and exit_is_valid
+    )
+
+
+def _full_proof_ok(verdict: dict) -> bool:
+    return (
+        _progress_eligible(verdict)
+        and verdict["timeouts"] == 0
+        and verdict["goals_proved"] == verdict["goals_total"]
+        and not verdict["failures"]
+    )
+
+
 def _from_report(records: object) -> dict | None:
     if not isinstance(records, list):
         return None
@@ -44,7 +82,13 @@ def _from_report(records: object) -> dict | None:
         "crash": None,
     }
     for record in records:
-        if not isinstance(record, dict) or record.get("smoke"):
+        if not isinstance(record, dict):
+            verdict["parse_ok"] = False
+            continue
+        smoke_field = record.get("smoke", False)
+        if not isinstance(smoke_field, bool):
+            verdict["parse_ok"] = False
+        if smoke_field is True:
             continue
         passed_field = record.get("passed")
         if not isinstance(passed_field, bool):
@@ -57,11 +101,12 @@ def _from_report(records: object) -> dict | None:
         if "rte" in prop.lower():
             verdict["rte_total"] += 1
             verdict["rte_proved"] += int(passed)
-        try:
-            timeout = int(record.get("timeout", 0) or 0)
-        except (TypeError, ValueError):
+        timeout_field = record.get("timeout", 0)
+        if not _nonnegative_int(timeout_field):
             verdict["parse_ok"] = False
             timeout = 0
+        else:
+            timeout = timeout_field
         verdict["timeouts"] += timeout
         if not passed and len(verdict["failures"]) < 20:
             verdict["failures"].append(
@@ -73,11 +118,7 @@ def _from_report(records: object) -> dict | None:
                     "verdict": record.get("verdict"),
                 }
             )
-    verdict["ok"] = (
-        verdict["parse_ok"]
-        and bool(verdict["goals_total"])
-        and (verdict["goals_proved"] == verdict["goals_total"])
-    )
+    verdict["ok"] = _full_proof_ok(verdict)
     return verdict
 
 
@@ -86,10 +127,10 @@ def _from_stdout(stdout: str) -> dict | None:
     if match is None:
         return None
     proved, total = int(match.group(1)), int(match.group(2))
-    return {
-        "ok": bool(total) and proved == total,
+    verdict = {
+        "ok": False,
         "parse_ok": True,
-        "compiled": "error" not in stdout[:2000].lower() or proved > 0,
+        "compiled": "error" not in stdout[:2000].lower(),
         "goals_total": total,
         "goals_proved": proved,
         "rte_total": 0,
@@ -98,6 +139,8 @@ def _from_stdout(stdout: str) -> dict | None:
         "failures": [],
         "crash": None,
     }
+    verdict["ok"] = _full_proof_ok(verdict)
+    return verdict
 
 
 def main() -> int:
@@ -177,6 +220,9 @@ def main() -> int:
                 "stderr_tail": stderr_tail,
             }
         )
+        # Preserve any earlier negative decision and reject a nominally
+        # all-passed report when process state contradicts proof success.
+        verdict["ok"] = verdict.get("ok") is True and _full_proof_ok(verdict)
         print(json.dumps({"exit_code": process.returncode, "verdict": verdict}))
         return 0
 

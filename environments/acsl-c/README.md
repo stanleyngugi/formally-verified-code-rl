@@ -7,7 +7,8 @@ remains the internal compatibility namespace.
 
 ## Current status
 
-Technical and public-data validation are complete for v0.1. The wheel bundles
+Technical and public-data validation are complete for v0.1. The recommended
+environment release is v0.1.7. The wheel bundles
 the project-authored Apache-2.0 Core-v1 and excludes CASP-derived task payload.
 CASP remains a non-bundled research adapter until its per-file rights can be
 reconstructed or permission is obtained.
@@ -17,8 +18,8 @@ reconstructed or permission is obtained.
 - Public proof replay: 64/64 references, 296/296 goals, 84/84 RTE goals,
   zero timeouts; 64/64 deterministic negative cases rejected.
 - Research-only CASP corpus: 221 train / 47 validation / 48 test; 22 excluded.
-- Reward: parse gate 0.10, VC fraction 0.50, full proof 0.20, fixed-spec
-  integrity 0.20.
+- Reward: parse gate 0.10, VC fraction 0.50, full proof 0.20, and proof-gated
+  fixed-contract integrity/strength 0.20.
 - Persistent SQLite/WAL verdict cache includes source, prover policy, timeout,
   runner schema, and full toolchain ID in its key.
 - Single-turn `null` and multi-turn `bash` harness modes are implemented.

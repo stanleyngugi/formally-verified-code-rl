@@ -11,7 +11,7 @@
     "tasks": 64,
     "version": "0.1.4"
   },
-  "date": "2026-09-11",
+  "date": "2026-09-13",
   "human_review_gate": false,
   "negative_evidence": {
     "artifact_sha256": "9915a46b61093dbf9c598cfadda762a34484df49117d7d00872ed27da8ac6457",
@@ -25,9 +25,9 @@
     "bundles_casp_data": false,
     "bundles_core_v1": true,
     "ok": true,
-    "wheel": "formally_verified_c-0.1.6-py3-none-any.whl",
-    "wheel_sha256": "833cb13adc826ddfe7a3c7604d0e6425b51750cd5110aad2ae3843d6a4ebcb1c",
-    "wheel_size_bytes": 38161
+    "wheel": "formally_verified_c-0.1.7-py3-none-any.whl",
+    "wheel_sha256": "5afae1e9078de85f0ecb4b0c26d918c0e39c33f7cecc7f0dfadcc7596eadc68d",
+    "wheel_size_bytes": 39174
   },
   "reference_replay": {
     "artifact_sha256": "332ba1b990335c136a3b99432f28919a692b900a013be97b18686b79a988d54a",
@@ -49,6 +49,6 @@
   "schema": "acsl-c-public-release-evidence-v1",
   "technical_release_gate": true,
   "tests": {
-    "passed": 42
+    "passed": 57
   }
 }

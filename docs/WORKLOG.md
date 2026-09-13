@@ -653,3 +653,25 @@ Docs/blog drift found and resolved by reading installed source:
 - Authenticated GitHub as `stanleyngugi` and Prime as `stanley-ngugi` for the
   private-first publication flow. No supplied credential was written to the
   repository.
+
+## Session 2026-09-13 — v0.1.7 fail-closed verdict reconciliation
+
+- Reconciled every serialized success result against parsing, compilation,
+  count, nonempty-goal, crash, exit-code, timeout, failure-list, and all-goals
+  invariants. Missing or malformed success fields cannot manufacture proof.
+- Made the parse/compile gate and fractional reward depend on a coherent,
+  compiled, clean-exit report. Full proof additionally requires zero timeouts,
+  no failures, and all goals proved.
+- Stopped caching proof-looking reports with contradictory process state and
+  added adversarial coverage for timeouts, negative/non-integer timeout fields,
+  malformed records, impossible counts, inconsistent failures, false
+  compilation, and inner/outer nonzero exits.
+- The Linux suite passes 57/57; Ruff and Python compilation checks pass.
+- Built and audited the 39,174-byte canonical v0.1.7 wheel at SHA-256
+  `5afae1e9078de85f0ecb4b0c26d918c0e39c33f7cecc7f0dfadcc7596eadc68d`.
+  An isolated Python 3.12 install loaded all 64 Core-v1 tasks.
+- Published Prime v0.1.7 publicly at content hash prefix `4fe4927e56c6`, pulled
+  its exact source archive, audited it before import, passed its own 57/57
+  tests, and loaded all 64 tasks. Prime's separately built wheel has SHA-256
+  `9917cf2d7c570bdc49983d04395c1fe6c7249691e9f518b01eb2edf54c3416a0`;
+  its 16 archive members are byte-identical to the canonical wheel.
