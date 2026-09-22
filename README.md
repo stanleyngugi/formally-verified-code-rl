@@ -32,8 +32,8 @@ See the repository's `docs/LEARNING_GUIDE.md` for concepts and
 For the environment-specific release gates—especially reward hacking,
 credit assignment, prompt boundaries, and what does *not* require a long RL
 run—see `docs/ENVIRONMENT_VALIDATION.md`.
-The release narrative is
-[`An RL Environment Where C Code Has to Be Proved, Not Just Tested`](docs/BLOG_POST_DRAFT.md),
+The technical article is
+[`An RL Environment Where C Code Has to Be Proved, Not Just Tested`](https://stanleyngugi.netlify.app/posts/formally-verified-c.html),
 and exact v0.1.7 changes and hashes are in
 [`RELEASE_NOTES_V0.1.7.md`](docs/RELEASE_NOTES_V0.1.7.md).
 
