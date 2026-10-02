@@ -101,7 +101,7 @@ docker pull ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:b7d7111eac04eb
 docker image inspect ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593 --format '{{.Id}}'
 docker run --rm -v "$PWD:/workspace/acsl-c" ghcr.io/stanleyngugi/formally-verified-c-judge@sha256:b7d7111eac04eb09405842b64af5084f671c8815f90a3d9ea7f5de92f0bcd593 \
   python3 /workspace/acsl-c/scripts/replay_references.py \
-  --data-dir /workspace/acsl-c/data --split all --jobs 1 \
+  --data-dir /workspace/acsl-c/data/packs/core-v1 --split all --jobs 1 \
   --output /workspace/acsl-c/artifacts/reference-replay.jsonl \
   --summary /workspace/acsl-c/artifacts/reference-replay.summary.json
 
